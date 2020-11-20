@@ -62,6 +62,11 @@ jobs:
       - name: Seed Database
         run: npm run seed
 
+      - name: Build Production Site
+        run: npm run build
+        # this should mirror the production build, but for now we're just using the dev
+        # server and gatsby serve instead (the npm script serve:client needs updating!)
+
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
@@ -69,9 +74,6 @@ jobs:
           tag: para
           record: true
           parallel: true
-          build: npm run build
-          # this should mirror the production build, but for now we're just using the dev
-          # server and gatsby serve instead (the npm script serve:client needs updating!)
           start: npm start
           wait-on: http://localhost:8000
           # the site builds in about 8 minutes, so there is currently 12 minutes of time
