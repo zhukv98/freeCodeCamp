@@ -1,0 +1,9 @@
+name: 'Crowdin Updater'
+description: 'Upates Crowdin files in the curriculum project for a merged PR'
+inputs:
+  commit-sha:
+    description: 'The commit number pushed'
+    default: ${{ github.sha }}
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
