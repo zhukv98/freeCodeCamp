@@ -71,7 +71,7 @@ function Footer() {
                     'https://www.freecodecamp.org/news/if-name-main-python-example/'
                   }
                 >
-                  Python Main
+                  Python Main tutorial
                 </Link>
                 <Link
                   external={false}
