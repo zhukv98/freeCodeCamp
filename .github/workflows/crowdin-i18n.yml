@@ -16,21 +16,17 @@ jobs:
       - name: Checkout Source Files
         uses: actions/checkout@v2
 
-      - name: Install Formatter Dependencies
-        working-directory: ./tools/formatter
-        run: npm ci
-
-      - name: Install Challenge MD Parser Dependencies
-        working-directory: ./tools/challenge-md-parser
-        run: npm ci
-
-      - name: Install Challenge MDX Dependencies
-        working-directory: ./tools/challenge-md-parser/mdx
-        run: npm ci        
-
-      - name: Install Crowdin Tools Dependencies
-        working-directory: ./tools/crowdin
-        run: npm ci
+      - name: Install Dependencies
+        working-directory: ./tools
+        run: |
+          cd ./formatter
+          npm ci
+          cd ../challenge-md-parser
+          npm ci
+          cd ../challenge-md-parser/mdx
+          npm ci
+          cd ../../crowdin
+          npm ci
 
       - name: Annotate Curriculum Files
         uses: ./tools/crowdin/actions/annotate-curriculum-files
