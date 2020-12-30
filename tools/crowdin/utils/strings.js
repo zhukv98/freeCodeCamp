@@ -39,11 +39,11 @@ const updateString = async ({ projectId, stringId, propsToUpdate }) => {
   });
 };
 
-const hideString = async (projectId, stringId) => {
+const changeHiddenStatus = async (projectId, stringId, newStatus) => {
   await updateString({
     projectId,
     stringId,
-    propsToUpdate: [{ path: '/isHidden', value: true }]
+    propsToUpdate: [{ path: '/isHidden', value: newStatus }]
   });
   await delay(200);
 };
@@ -57,15 +57,18 @@ const updateFileStrings = async ({ projectId, fileId, challengeTitle }) => {
   for (let {
     data: { id: stringId, text, isHidden, context }
   } of fileStrings) {
-    if (!isHidden && shouldHide(text, context, challengeTitle)) {
-      await hideString(projectId, stringId);
+    const hideString = shouldHide(text, context, challengeTitle);
+    if (!isHidden && hideString) {
+      changeHiddenStatus(projectId, stringId, true);
+    } else if (isHidden && !hideString) {
+      changeHiddenStatus(projectId, stringId, false);
     }
   }
 };
 
 module.exports = {
   getStrings,
-  hideString,
+  changeHiddenStatus,
   updateString,
   updateFileStrings
 };

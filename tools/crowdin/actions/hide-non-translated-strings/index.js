@@ -1,25 +1,30 @@
-console.log('hiding non-translated strings...');
-/*
+require('dotenv').config({ path: `${__dirname}/../../.env` });
+const fs = require('fs');
+const path = require('path');
 const matter = require('gray-matter');
-
-const { getFiles } = require('./utils/files');
-const { updateFileStrings } = require('./utils/strings');
+const { getFiles } = require('../../utils/files');
+const { updateFileStrings } = require('../../utils/strings');
 // const delay = require('./utils/delay');
 
-const hideNonTranslatedStrings = async (projectId) => {
+const hideNonTranslatedStrings = async projectId => {
+  console.log('start hiding non-translated strings...');
   const crowdinFiles = await getFiles(projectId);
-  if (crowdinFiles.data) {
-    for (let { fileId } of crowdinFiles.data) {
-
+  if (crowdinFiles && crowdinFiles.length) {
+    for (let { fileId, path: crowdinFilePath } of crowdinFiles) {
+      const challengeFilePath = path.join(
+        __dirname,
+        '/../../../../',
+        crowdinFilePath
+      );
+      const challengeContent = fs.readFileSync(challengeFilePath);
       const {
         data: { title: challengeTitle }
-      } = matter(fileContent);
+      } = matter(challengeContent);
       await updateFileStrings({ projectId, fileId, challengeTitle });
-
     }
   }
+  console.log('hiding non-translated strings complete');
 };
 
-const projectId = 10;
-updateCrowdinFiles(projectId);
-*/
+const projectId = process.env.CROWDIN_PROJECT_ID;
+hideNonTranslatedStrings(projectId);

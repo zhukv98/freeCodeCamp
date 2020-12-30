@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
+    "gray-matter": "^4.0.2",
     "node-fetch": "^2.6.1",
     "readdirp": "^3.5.0"
   }
