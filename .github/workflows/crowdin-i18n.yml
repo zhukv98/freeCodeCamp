@@ -1,15 +1,14 @@
-name: Crowdin Sync
+name: Crowdin i18n Upload Action
 on:
   workflow_dispatch:
   push:
     branches:
       - crowdin-source
-  # schedule:
-  # (TODO?) run this Action every 14 days
-  # - cron: '0 * */14 * *'
+      - test-crowdin
 
 jobs:
-  i18n-sync-docs:
+  
+  i18n-upload-curriculum-files:
     name: Learn
     runs-on: ubuntu-18.04
 
@@ -17,7 +16,22 @@ jobs:
       - name: Checkout Source Files
         uses: actions/checkout@v2
 
-      - name: Crowdin Synchronize
+      - name: Install Formatter Dependencies
+        working-directory: ./tools/formatter
+        run: npm ci
+
+      - name: Install Challenge MD Parser
+        working-directory: ./tools/challenge-md-parser
+        run: npm ci
+
+      - name: Install Crowdin Tools
+        working-directory: ./tools/crowdin
+        run: npm ci
+
+      - name: Annotate Curriculum Files
+        uses: ./tools/crowdin/actions/annotate-curriculum-files
+
+      - name: Crowdin Upload
         uses: crowdin/github-action@master
         # options: https://github.com/crowdin/github-action/blob/master/action.yml
         with:
@@ -42,9 +56,15 @@ jobs:
           base_url: ${{ secrets.CROWDIN_BASE_URL_FCC }}
 
           # Uncomment below to debug
-          dryrun_action: true
+          # dryrun_action: true
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID_CURRICULUM }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_CAMPERBOT_SERVICE_TOKEN }}
+
+      - name: Hide Non-Translated Strings
+        uses: ./tools/crowdin/actions/hide-non-translated-strings
+        env:
+          CROWDIN_API_URL: 'https://freecodecamp.crowdin.com/api/v2/'
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_CAMPERBOT_SERVICE_TOKEN }}
