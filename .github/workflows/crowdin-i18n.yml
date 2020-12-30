@@ -1,9 +1,9 @@
 name: Crowdin Sync
 on:
   workflow_dispatch:
-  #push:
-  #  branches:
-  #    - test-crowdin
+  push:
+    branches:
+      - crowdin-source
   # schedule:
   # (TODO?) run this Action every 14 days
   # - cron: '0 * */14 * *'
@@ -27,8 +27,8 @@ jobs:
           import_eq_suggestions: false
 
           # downloads
-          #download_translations: true
-          #commit_message: 'chore(i8n,learn): processed translations from crowdin'
+          download_translations: false
+          commit_message: 'chore(i8n,learn): processed translations from crowdin'
 
           # pull-request
           localization_branch_name: i18n-sync-learn
@@ -42,7 +42,7 @@ jobs:
           base_url: ${{ secrets.CROWDIN_BASE_URL_FCC }}
 
           # Uncomment below to debug
-          # dryrun_action: true
+          dryrun_action: true
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
